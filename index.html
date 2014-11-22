@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Генератор паніні</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="lib/svg.min.js"></script>
+    <script src="lib/svg.draggable.min.js"></script>
+    <script src="lib/rgbcolor.js"></script>
+    <script src="lib/StackBlur.js"></script>
+    <script src="lib/canvg.js"></script>
+    <script src="lib/svg.export.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+<div id="card"></div>
+<canvas id="canvas"></canvas>
+<button>Update</button>
+<script>
+    var draw = SVG('card');
+    var stamps = [];
+    for (var i = 0; i < 10; i++) {
+        var img = draw.image('merci/' + Random.int(13) + '.png', 200, 70)
+                .x(Random.int(100) + 30)
+                .y(i * 70)
+                .rotate(Math.random() < 0.25 ? 180 : 0)
+                .attr('class', 'stamp');
+        var cardBounds = function (x, y) {
+            return {
+                x: x > 0 && x < 200,
+                y: y > 0 && y < 650
+            }
+        };
+        img.draggable(cardBounds);
+        img.dragstart = function (e) {
+            this.opacity(0.3);
+        };
+        img.dragmove = function (delta, event) {
+            var stamp = this,
+                    rightClick = (event.button === 2),
+                    allowedRotation = delta.y >= -90 && delta.y <= 90;
+            if (rightClick) {
+                if (allowedRotation) {
+                    stamp.transform({
+                        rotation: delta.y
+                    });
+                }
+                if (delta.x != 0 || delta.y != 0) {
+                    stamp.transform({
+                        x: -(delta.x || 0),
+                        y: -(delta.y || 0)
+                    });
+                }
+            } else {
+                stamp.translate(0, 0);
+            }
+        };
+        img.dragend = function () {
+            this.opacity(1);
+        };
+        stamps.push(img);
+    }
+
+    $(document).on('ready', function () {
+        Stamps.redraw();
+    });
+    $('button').on('click', function () {
+        Stamps.redraw();
+    });
+</script>
+</body>
+</html>

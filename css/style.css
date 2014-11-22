@@ -1,0 +1,16 @@
+#card, canvas, img {
+    border: 1px solid crimson;
+    height: 720px;
+    width: 400px;
+    float: left;
+}
+
+#paper {
+    display: none;
+    width: 2480px;
+    height: 3508px;
+    background: #fc9;
+    transform: scale(.2);
+    margin-top: -1411px;
+    margin-left: -1000px;
+}
